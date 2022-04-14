@@ -16,15 +16,15 @@ class Command(ScrapyCommand):
         
     def add_options(self, parser):
         ScrapyCommand.add_options(self, parser)
-        parser.add_option("-a", dest="spargs", action="append", default=[], metavar="NAME=VALUE",
+        parser.add_argument("-a", dest="spargs", action="append", default=[], metavar="NAME=VALUE",
                           help="set spider argument (may be repeated)")
-        parser.add_option("-p", "--pages", nargs = 2, type="int", dest="pages", default=[],
+        parser.add_argument("-p", "--pages", nargs = 2, type=int, dest="pages", default=[],
                           help="set the range of pages you want to crawl")  
-        parser.add_option("-g", "--good", action="store_true", dest="good_only", default=False,
+        parser.add_argument("-g", "--good", action="store_true", dest="good_only", default=False,
                           help="only crawl good threads and their posts and comments")
-        parser.add_option("-f", "--filter", type="str", dest="filter", default="",
+        parser.add_argument("-f", "--filter", type=str, dest="filter", default="",
                           help='set function name in "filter.py" to filter threads')
-        parser.add_option("-s", "--see_lz", action="store_true", dest="see_lz", default=False,
+        parser.add_argument("-s", "--see_lz", action="store_true", dest="see_lz", default=False,
                           help='enable "only see lz" mode')              
                           
     def set_pages(self, pages):

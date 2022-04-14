@@ -13,7 +13,7 @@ class TiebaSpider(scrapy.Spider):
     end_page = 9999
     filter = None
     see_lz = False
-    my_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'}
+    my_headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20"}
     
     def parse(self, response): #forum parser
         print("Crawling page %d..." % self.cur_page)
@@ -34,7 +34,7 @@ class TiebaSpider(scrapy.Spider):
             #filter过滤掉的帖子及其回复均不存入数据库
                 
             yield item
-            meta = {'thread_id': data['id'], 'page': 1}
+            meta = {'thread_id': data['id'], 'page': 1, 'proxy' : "http://scraperapi:f5bd0a3874134c5ada83a7e24355c512@proxy-server.scraperapi.com:8001"}
             url = 'http://tieba.baidu.com/p/%d' % data['id']
             if self.see_lz:
                 url += '?see_lz=1'
@@ -56,8 +56,8 @@ class TiebaSpider(scrapy.Spider):
                 item['id'] = data['content']['post_id']
                 item['author'] = data['author']['user_name']
                 item['comment_num'] = data['content']['comment_num']
-                if item['comment_num'] > 0:
-                    has_comment = True
+                #if item['comment_num'] > 0:
+                #    has_comment = True
                 content = floor.xpath(".//div[contains(@class,'j_d_post_content')]").extract_first()
                 #以前的帖子, data-field里面没有content
                 item['content'] = helper.parse_content(content)

@@ -12,7 +12,7 @@ class TiebaSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
-
+    
     @classmethod
     def from_crawler(cls, crawler):
         # This method is used by Scrapy to create your spiders.
@@ -50,6 +50,7 @@ class TiebaSpiderMiddleware(object):
 
         # Must return only requests (not items).
         for r in start_requests:
+            r.meta['proxy'] = "http://scraperapi:f5bd0a3874134c5ada83a7e24355c512@proxy-server.scraperapi.com:8001"
             yield r
 
     def spider_opened(self, spider):
