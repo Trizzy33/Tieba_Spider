@@ -6,7 +6,7 @@ from tieba.items import ThreadItem, PostItem, CommentItem
 from . import helper
 import time
 from math import ceil
-
+import sys
 class TiebaSpider(scrapy.Spider):
     name = "tieba"
     cur_page = 1    #modified by pipelines (open_spider)
@@ -30,7 +30,10 @@ class TiebaSpider(scrapy.Spider):
         print("Crawling page %d..." % self.cur_page)
         for sel in response.xpath('//li[contains(@class, "j_thread_list")]'):
             data = json.loads(sel.xpath('@data-field').extract_first())
-            
+            if "百度安全验证" in response.text:
+                print("verification")
+                time.sleep(3600)
+                sys.exit()
             if data['id'] == 1: # 去掉"本吧吧主火热招募"
                 continue
             item = ThreadItem()
@@ -51,8 +54,10 @@ class TiebaSpider(scrapy.Spider):
             url = 'http://tieba.baidu.com/p/%d' % data['id']
             if self.see_lz:
                 url += '?see_lz=1'
+            time.sleep(5)
             yield scrapy.Request(url, callback = self.parse_post,  meta = meta, 
                 headers=self.my_headers)
+        time.sleep(5)
         next_page = response.xpath('//a[@class="next pagination-item "]/@href')
         self.cur_page += 1
         if next_page:

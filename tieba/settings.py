@@ -8,7 +8,7 @@ NEWSPIDER_MODULE = 'tieba.spiders'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
-
+DOWNLOAD_DELAY = 360
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 
@@ -17,6 +17,7 @@ ITEM_PIPELINES = {
 }
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 1,
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 1,
 }
 
 LOG_LEVEL = 'WARNING'
