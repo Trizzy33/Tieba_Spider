@@ -13,12 +13,24 @@ class TiebaSpider(scrapy.Spider):
     end_page = 9999
     filter = None
     see_lz = False
-    my_headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20"}
-    
+   
+    my_headers = {'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': "Windows",
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-site',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',
+    'accept-language' : 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7,ja;q=0.6',
+    'accept-encoding' : 'gzip, deflate, br',
+    #'cookie' : 'BAIDUID=7728E882F3CCCE6D1BBF2E35B81BD092:FG=1; ZFY=GOmw2tcgCG4fj93DAJngUD15K8A4LvyqRtk38JfpTNw:C; BAIDU_WISE_UID=wapp_1640273827460_247; BIDUPSID=7728E882F3CCCE6D1BBF2E35B81BD092; PSTM=1643303943; BAIDUID_BFESS=7728E882F3CCCE6D1BBF2E35B81BD092:FG=1; BDUSS=TZkVVlmOXRVaXNaemhNZUJxSmp6ck1hbVM4b2JLZEpsRzVPa24tS3p6dFhRSUJpRVFBQUFBJCQAAAAAAAAAAAEAAAB2HrUyyP3N8rK7v8m~ucGmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFezWGJXs1hid; BDUSS_BFESS=TZkVVlmOXRVaXNaemhNZUJxSmp6ck1hbVM4b2JLZEpsRzVPa24tS3p6dFhRSUJpRVFBQUFBJCQAAAAAAAAAAAEAAAB2HrUyyP3N8rK7v8m~ucGmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFezWGJXs1hid; BAIDU_SSP_lcr=https://www.google.com/; ab_sr=1.0.1_YzFiZDcyN2MwYTkwNTIxODI0OThmZDMzZTVmZGU2ZTU4NTEyYTNhZjMzZjU4MTc1N2U1NzY0MjFmNWZkYWFiMWRhODBkZThhZWI5YmYyYjVhNzRhZDQwMWNkZjI2YTY2Njc0ZjM3ZGFlYWM5NWI4ZTE3YmEzOTkwYjZiMTZkYjYwMWM4ZWM0ZjkzYzMzMjk1OWI2OTI0NzliYzkyN2M2OTViYmUyN2I2N2M4OGRhNGQ3OWNhYzZiODJmN2U4ZGI1'
+    }
+
     def parse(self, response): #forum parser
         print("Crawling page %d..." % self.cur_page)
         for sel in response.xpath('//li[contains(@class, "j_thread_list")]'):
             data = json.loads(sel.xpath('@data-field').extract_first())
+            
             if data['id'] == 1: # 去掉"本吧吧主火热招募"
                 continue
             item = ThreadItem()
@@ -35,6 +47,7 @@ class TiebaSpider(scrapy.Spider):
                 
             yield item
             meta = {'thread_id': data['id'], 'page': 1, 'proxy' : "http://scraperapi:f5bd0a3874134c5ada83a7e24355c512@proxy-server.scraperapi.com:8001"}
+            #'proxy' : "http://scraperapi:f5bd0a3874134c5ada83a7e24355c512@proxy-server.scraperapi.com:8001"
             url = 'http://tieba.baidu.com/p/%d' % data['id']
             if self.see_lz:
                 url += '?see_lz=1'
